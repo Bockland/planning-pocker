@@ -153,7 +153,8 @@ const Room = () => {
                 <button 
                   onClick={() => {
                     sessionStorage.removeItem('poker_alias');
-                    window.location.reload();
+                    setAlias('');
+                    setHasJoined(false);
                   }}
                   style={{ 
                       backgroundColor: '#ffedd5', color: '#7c2d12', border: '1px solid #c2410c' 
