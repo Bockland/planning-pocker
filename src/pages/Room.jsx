@@ -16,6 +16,19 @@ const Room = () => {
   const [myVote, setMyVote] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userId, setUserId] = useState('');
+  
+  // Mobile Tabs State
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [activeTab, setActiveTab] = useState('participants');
+
+  // Handle Resize for Mobile View
+  useEffect(() => {
+    const handleResize = () => {
+        setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Get or Create User ID
   useEffect(() => {
@@ -137,14 +150,17 @@ const Room = () => {
 
   return (
     <div className="container">
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-            <h2 style={{ margin: 0 }}>Room: <span style={{ opacity: 0.7 }}>{roomId.slice(0, 8)}...</span></h2>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2 style={{ margin: 0, fontSize: isMobile ? '1.2rem' : '1.5rem' }}>
+                Room: <span style={{ opacity: 0.7 }}>{roomId.slice(0, 8)}...</span>
+            </h2>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
                 {isAdmin && (
                     <button 
                     onClick={copyLink}
                     style={{ 
-                        backgroundColor: '#fdba74', color: '#7c2d12', border: '1px solid #c2410c' 
+                        backgroundColor: '#fdba74', color: '#7c2d12', border: '1px solid #c2410c',
+                        padding: isMobile ? '0.4em 0.8em' : '0.6em 1.2em', fontSize: isMobile ? '0.9rem' : '1rem'
                     }}
                     >
                         Invitar
@@ -157,7 +173,8 @@ const Room = () => {
                     setHasJoined(false);
                   }}
                   style={{ 
-                      backgroundColor: '#ffedd5', color: '#7c2d12', border: '1px solid #c2410c' 
+                      backgroundColor: '#ffedd5', color: '#7c2d12', border: '1px solid #c2410c',
+                       padding: isMobile ? '0.4em 0.8em' : '0.6em 1.2em', fontSize: isMobile ? '0.9rem' : '1rem'
                   }}
                 >
                     Cambiar Nombre
@@ -165,9 +182,45 @@ const Room = () => {
             </div>
         </header>
 
+        {/* Mobile Tabs */}
+        {isMobile && (
+            <div style={{ display: 'flex', marginBottom: '1.5rem', borderBottom: '1px solid #334155' }}>
+                <div 
+                    onClick={() => setActiveTab('participants')}
+                    style={{ 
+                        flex: 1, textAlign: 'center', padding: '1rem', cursor: 'pointer',
+                        color: activeTab === 'participants' ? '#3b82f6' : '#94a3b8',
+                        borderBottom: activeTab === 'participants' ? '2px solid #3b82f6' : 'none',
+                        fontWeight: activeTab === 'participants' ? 'bold' : 'normal'
+                    }}
+                >
+                    Participantes
+                </div>
+                <div 
+                    onClick={() => setActiveTab('details')}
+                    style={{ 
+                        flex: 1, textAlign: 'center', padding: '1rem', cursor: 'pointer',
+                        color: activeTab === 'details' ? '#3b82f6' : '#94a3b8',
+                        borderBottom: activeTab === 'details' ? '2px solid #3b82f6' : 'none',
+                        fontWeight: activeTab === 'details' ? 'bold' : 'normal'
+                    }}
+                >
+                    Detalles
+                </div>
+            </div>
+        )}
+
         <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
             {/* Left Column: Participants Board */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div 
+                style={{ 
+                    flex: 1, 
+                    display: (!isMobile || activeTab === 'participants') ? 'flex' : 'none', 
+                    flexDirection: 'column', 
+                    gap: '2rem',
+                    width: isMobile ? '100%' : 'auto'
+                }}
+            >
                 <div className="card" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '2rem', marginBottom: '2rem' }}>
                     {votingParticipants && votingParticipants.map((p) => (
@@ -249,7 +302,14 @@ const Room = () => {
             </div>
 
             {/* Right Column: Sidebar (Admin & Stats) */}
-            <div style={{ width: '250px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div 
+                style={{ 
+                    width: isMobile ? '100%' : '250px', 
+                    display: (!isMobile || activeTab === 'details') ? 'flex' : 'none', 
+                    flexDirection: 'column', 
+                    gap: '1rem' 
+                }}
+            >
                  {/* Admin Info */}
                  <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
                     <h3 style={{ marginTop: 0, fontSize: '1rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
