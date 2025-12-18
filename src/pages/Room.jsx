@@ -17,9 +17,19 @@ const Room = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [userId, setUserId] = useState('');
   
+  // Refs for animation
+  const cardRefs = React.useRef({}); // { [userId]: DOMElement }
+  const [flyingEmojis, setFlyingEmojis] = useState([]); // [{ id, fromX, fromY, toX, toY, emoji }]
+  
   // Mobile Tabs State
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [activeTab, setActiveTab] = useState('participants');
+
+  // Reactions State
+  const [reactions, setReactions] = useState({}); // { [userId]: '👍' }
+  const [reactionMenuTarget, setReactionMenuTarget] = useState(null); // userId (Open Menu)
+  const [hoveredCard, setHoveredCard] = useState(null); // userId (Show Button)
+  const EMOTICONS = ['👍', '👏', '🚀', '🍆', '❤️', '😴', '⏰'];
 
   // Handle Resize for Mobile View
   useEffect(() => {
@@ -76,10 +86,49 @@ const Room = () => {
         }
       }
     });
+
+    socket.on('reaction_received', ({ fromUserId, targetUserId, reaction }) => {
+        // Calculate positions for flying animation
+        if (fromUserId && targetUserId && cardRefs.current[fromUserId] && cardRefs.current[targetUserId]) {
+            const startRect = cardRefs.current[fromUserId].getBoundingClientRect();
+            const endRect = cardRefs.current[targetUserId].getBoundingClientRect();
+            const id = uuidv4();
+            const emojiSize = 32; // Approx size of emoji wrapper
+
+            setFlyingEmojis(prev => [...prev, {
+                id,
+                emoji: reaction,
+                style: {
+                    '--startX': `${startRect.left + startRect.width / 2 - emojiSize / 2}px`,
+                    '--startY': `${startRect.top + startRect.height / 2 - emojiSize / 2}px`,
+                    '--endX': `${endRect.left + endRect.width / 2 - emojiSize / 2}px`,
+                    '--endY': `${endRect.top + endRect.height / 2 - emojiSize / 2}px`,
+                }
+            }]);
+
+            // Clean up flying emoji after animation
+            setTimeout(() => {
+                setFlyingEmojis(prev => prev.filter(e => e.id !== id));
+            }, 600); // Animation duration (0.6s)
+        }
+    });
+
     return () => {
       socket.off('update_room');
+      socket.off('reaction_received');
     };
   }, [socket, userId]);
+
+  // Click Outside Listener to close menu
+  useEffect(() => {
+      const handleClickOutside = (event) => {
+          if (reactionMenuTarget && !event.target.closest('.reaction-menu-container')) {
+              setReactionMenuTarget(null);
+          }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [reactionMenuTarget]);
 
   const handleSetAlias = (e) => {
     e.preventDefault();
@@ -113,6 +162,11 @@ const Room = () => {
     navigator.clipboard.writeText(window.location.href);
     alert('Link copied to clipboard!');
   }
+
+  const handleSendReaction = (targetUserId, reaction) => {
+      socket.emit('send_reaction', { roomId, targetUserId, reaction });
+      // Removed setReactionMenuTarget(null) to keep menu open
+  };
 
   const averageScore = useMemo(() => {
       if (!roomData || !roomData.isRevealed) return null;
@@ -224,7 +278,12 @@ const Room = () => {
                 <div className="card" style={{ minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '2rem', marginBottom: '2rem' }}>
                     {votingParticipants && votingParticipants.map((p) => (
-                        <div key={p.userId || p.name} style={{ textAlign: 'center', position: 'relative' }}>
+                        <div key={p.userId || p.name} 
+                             ref={el => cardRefs.current[p.userId] = el}
+                             style={{ textAlign: 'center', position: 'relative' }}
+                             onMouseEnter={() => !isMobile && setHoveredCard(p.userId)}
+                             onMouseLeave={() => !isMobile && setHoveredCard(null)}
+                        >
                             {isAdmin && p.userId !== userId && (
                                 <button 
                                     onClick={() => kickUser(p.socketId)}
@@ -240,6 +299,62 @@ const Room = () => {
                                     ✕
                                 </button>
                             )}
+
+                             {/* Reaction Button (Show if hovered OR menu is open OR mobile) */}
+                             {p.userId !== userId && (hoveredCard === p.userId || reactionMenuTarget === p.userId || isMobile) && (
+                                <div className="reaction-menu-container" style={{ 
+                                    position: 'absolute', 
+                                    top: '40%', left: '50%', transform: 'translate(-50%, -50%)',
+                                    zIndex: 20
+                                }}>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            // Toggle: if open, close. If closed, open.
+                                            setReactionMenuTarget(reactionMenuTarget === p.userId ? null : p.userId);
+                                        }} 
+                                        style={{
+                                            background: reactionMenuTarget === p.userId ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.2)', 
+                                            border: 'none', borderRadius: '50%',
+                                            width: '32px', height: '32px', cursor: 'pointer', fontSize: '1.2rem',
+                                            lineHeight: '1', padding: 0, backdropFilter: 'blur(4px)'
+                                        }}
+                                        title="React"
+                                    >
+                                        ☺
+                                    </button>
+                                     
+                                    {/* Popover Menu - Only show if TARGET is open */}
+                                    {reactionMenuTarget === p.userId && (
+                                        <div style={{
+                                            position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
+                                            background: '#334155', border: '1px solid #475569', borderRadius: '8px',
+                                            padding: '0.5rem', display: 'flex', gap: '0.3rem', zIndex: 30,
+                                            boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+                                        }}
+                                        onMouseLeave={() => setReactionMenuTarget(null)}
+                                        >
+                                            {EMOTICONS.map(emoji => (
+                                                <button key={emoji}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleSendReaction(p.userId, emoji);
+                                                    }}
+                                                    style={{
+                                                        background: 'transparent', border: 'none', cursor: 'pointer',
+                                                        fontSize: '1.2rem', padding: '2px'
+                                                    }}
+                                                >
+                                                    {emoji}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                             )}
+
+
+
                         <div 
                             style={{ 
                             width: '60px', 
@@ -331,6 +446,16 @@ const Room = () => {
                  </div>
             </div>
         </div>
+
+
+        {/* Flying Emojis Layer */}
+        {flyingEmojis.map(item => (
+            <div key={item.id} className="flying-emoji-wrapper" style={item.style}>
+                <div className="flying-emoji-inner">
+                    {item.emoji}
+                </div>
+            </div>
+        ))}
     </div>
   );
 };

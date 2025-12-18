@@ -101,3 +101,55 @@ input:focus {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
+
+@keyframes bounce {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -60%) scale(1.2);
+  }
+}
+
+.flying-emoji-wrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  width: 2rem;
+  height: 2rem;
+  font-size: 2rem;
+  transform: translate(var(--startX), var(--startY));
+  animation: flyX 0.6s linear forwards;
+}
+
+.flying-emoji-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: flyY 0.6s forwards;
+}
+
+@keyframes flyX {
+  to {
+    transform: translate(var(--endX), var(--startY));
+  }
+}
+
+@keyframes flyY {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: ease-out;
+  }
+  50% {
+    /* Arc height: 50px up from the linear path at midpoint */
+    transform: translateY(calc((var(--endY) - var(--startY)) * 0.5 - 50px));
+    animation-timing-function: ease-in;
+  }
+  100% {
+    transform: translateY(calc(var(--endY) - var(--startY)));
+  }
+}
