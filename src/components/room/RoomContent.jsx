@@ -95,6 +95,13 @@ const RoomContent = () => {
                              className="participant-item"
                              onMouseEnter={() => !isMobile && setHoveredCard(p.userId)}
                              onMouseLeave={() => !isMobile && setHoveredCard(null)}
+                             onClick={() => {
+                                 // On mobile, clicking the card toggles the reaction menu
+                                 if (isMobile && p.userId !== userId) {
+                                     setReactionMenuTarget(reactionMenuTarget === p.userId ? null : p.userId);
+                                 }
+                             }}
+                             style={{ cursor: isMobile && p.userId !== userId ? 'pointer' : 'default' }}
                         >
                             {isAdmin && p.userId !== userId && (
                                 <button 
