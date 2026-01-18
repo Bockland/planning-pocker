@@ -79,8 +79,6 @@ export const useRoom = () => {
         if (!socket) return;
         
         const handleUpdateRoom = (data) => {
-            console.log('Room updated:', data); // Debug log
-            console.log('isRevealed:', data?.isRevealed); // Debug log
             setRoomData(data);
             if (data && userId) {
                 const participant = data.participants.find(p => p.userId === userId);

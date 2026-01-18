@@ -107,7 +107,7 @@ const RoomContent = () => {
                             )}
 
                              {/* Reaction Button */}
-                             {p.userId !== userId && (hoveredCard === p.userId || reactionMenuTarget === p.userId || isMobile) && (
+                             {p.userId !== userId && (hoveredCard === p.userId || reactionMenuTarget === p.userId) && (
                                 <div className="reaction-menu-container">
                                     <button
                                         onClick={(e) => {
