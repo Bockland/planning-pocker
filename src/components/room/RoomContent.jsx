@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRoom } from '../../hooks/useRoom';
 import { CARDS, EMOTICONS } from '../../config/config';
+import ChangeNameModal from './ChangeNameModal';
 import './RoomContent.css';
 
 const RoomContent = () => {
@@ -28,7 +29,11 @@ const RoomContent = () => {
     kickUser,
     copyLink,
     handleSendReaction,
-    logout
+    isNameModalOpen,
+    openNameModal,
+    closeNameModal,
+    handleChangeName,
+    alias
   } = useRoom();
 
   if (!roomData) {
@@ -51,7 +56,7 @@ const RoomContent = () => {
                     </button>
                 )}
                 <button 
-                  onClick={logout}
+                  onClick={openNameModal}
                   className={`btn-change-name ${isMobile ? 'btn-mobile' : ''}`}
                 >
                     Cambiar Nombre
@@ -205,6 +210,14 @@ const RoomContent = () => {
                  </div>
             </div>
         </div>
+
+        {/* Change Name Modal */}
+        <ChangeNameModal 
+            isOpen={isNameModalOpen}
+            onClose={closeNameModal}
+            onChangeName={handleChangeName}
+            currentName={alias}
+        />
 
         {/* Flying Emojis Layer */}
         {flyingEmojis.map(item => (

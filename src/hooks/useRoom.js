@@ -27,6 +27,9 @@ export const useRoom = () => {
     const [reactionMenuTarget, setReactionMenuTarget] = useState(null); // userId (Open Menu)
     const [hoveredCard, setHoveredCard] = useState(null); // userId (Show Button)
 
+    // Name Change Modal State
+    const [isNameModalOpen, setIsNameModalOpen] = useState(false);
+
     // Handle Resize for Mobile View
     useEffect(() => {
         const handleResize = () => {
@@ -76,6 +79,8 @@ export const useRoom = () => {
         if (!socket) return;
         
         const handleUpdateRoom = (data) => {
+            console.log('Room updated:', data); // Debug log
+            console.log('isRevealed:', data?.isRevealed); // Debug log
             setRoomData(data);
             if (data && userId) {
                 const participant = data.participants.find(p => p.userId === userId);
@@ -190,6 +195,24 @@ export const useRoom = () => {
         setHasJoined(false);
     };
 
+    const openNameModal = () => {
+        setIsNameModalOpen(true);
+    };
+
+    const closeNameModal = () => {
+        setIsNameModalOpen(false);
+    };
+
+    const handleChangeName = (newName) => {
+        if (newName.trim() && socket) {
+            sessionStorage.setItem('poker_alias', newName);
+            setAlias(newName);
+            // Re-emit join with new name
+            socket.emit('join_room', { roomId, name: newName, isAdmin, userId });
+            closeNameModal();
+        }
+    };
+
     return {
         // State
         roomId,
@@ -224,6 +247,12 @@ export const useRoom = () => {
         kickUser,
         copyLink,
         handleSendReaction,
-        logout
+        logout,
+        
+        // Name Modal
+        isNameModalOpen,
+        openNameModal,
+        closeNameModal,
+        handleChangeName
     };
 };

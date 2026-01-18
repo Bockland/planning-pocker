@@ -23,7 +23,11 @@
 }
 
 .form-field {
-  text-align: left;
+  text-align: center;
+}
+
+.form-field input {
+  width: 100%;
 }
 
 .form-label {

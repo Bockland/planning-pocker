@@ -21,3 +21,11 @@
   flex-direction: column;
   gap: 1rem;
 }
+
+.form-field {
+  text-align: center;
+}
+
+.form-field input {
+  width: 100%;
+}
