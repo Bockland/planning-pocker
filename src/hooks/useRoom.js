@@ -211,6 +211,10 @@ export const useRoom = () => {
         }
     };
 
+    const leaveRoom = () => {
+        navigate('/');
+    };
+
     return {
         // State
         roomId,
@@ -251,6 +255,7 @@ export const useRoom = () => {
         isNameModalOpen,
         openNameModal,
         closeNameModal,
-        handleChangeName
+        handleChangeName,
+        leaveRoom
     };
 };

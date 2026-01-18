@@ -33,7 +33,8 @@ const RoomContent = () => {
     openNameModal,
     closeNameModal,
     handleChangeName,
-    alias
+    alias,
+    leaveRoom
   } = useRoom();
 
   if (!roomData) {
@@ -47,6 +48,13 @@ const RoomContent = () => {
                 Room: <span className="room-id">{roomId.slice(0, 8)}</span>
             </h2>
             <div className="room-actions">
+                <button 
+                  onClick={leaveRoom}
+                  className={`btn-secondary ${isMobile ? 'btn-mobile' : ''}`}
+                  title="Volver al inicio"
+                >
+                    🏠
+                </button>
                 {isAdmin && (
                     <button 
                     onClick={copyLink}
