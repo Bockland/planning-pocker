@@ -51,7 +51,7 @@ const RoomContent = () => {
                 <button 
                   onClick={leaveRoom}
                   className={`btn-secondary ${isMobile ? 'btn-mobile' : ''}`}
-                  title="Volver al inicio"
+                  title="Back to Home"
                 >
                     🏠
                 </button>
@@ -60,14 +60,14 @@ const RoomContent = () => {
                     onClick={copyLink}
                     className={`btn-invite ${isMobile ? 'btn-mobile' : ''}`}
                     >
-                        Invitar
+                        Invite
                     </button>
                 )}
                 <button 
                   onClick={openNameModal}
                   className={`btn-change-name ${isMobile ? 'btn-mobile' : ''}`}
                 >
-                    Cambiar Nombre
+                    Change Name
                 </button>
             </div>
         </header>
@@ -79,13 +79,13 @@ const RoomContent = () => {
                     onClick={() => setActiveTab('participants')}
                     className={`mobile-tab ${activeTab === 'participants' ? 'mobile-tab-active' : ''}`}
                 >
-                    Participantes
+                    Participants
                 </div>
                 <div 
                     onClick={() => setActiveTab('details')}
                     className={`mobile-tab ${activeTab === 'details' ? 'mobile-tab-active' : ''}`}
                 >
-                    Detalles
+                    Details
                 </div>
             </div>
         )}
@@ -175,8 +175,8 @@ const RoomContent = () => {
                     {/* Controls */}
                     {isAdmin && (
                         <div className="admin-controls">
-                        <button className="btn-primary" onClick={reveal} disabled={roomData.isRevealed}>Revelar Puntajes</button>
-                        <button className="btn-danger" onClick={reset}>Reiniciar Puntajes</button>
+                        <button className="btn-primary" onClick={reveal} disabled={roomData.isRevealed}>Reveal Votes</button>
+                        <button className="btn-danger" onClick={reset}>Reset Votes</button>
                         </div>
                     )}
                 </div>
@@ -207,7 +207,7 @@ const RoomContent = () => {
                  {/* Admin Info */}
                  <div className="card info-card">
                     <h3 className="info-title">
-                        Administrador
+                        Admin
                     </h3>
                     <div className="info-value">
                         {adminParticipant ? adminParticipant.name : 'Unknown'}
@@ -217,7 +217,7 @@ const RoomContent = () => {
                  {/* Average Score */}
                  <div className="card info-card">
                     <h3 className="info-title">
-                        Promedio
+                        Average
                     </h3>
                     <div className={`average-score ${roomData.isRevealed ? 'average-score-revealed' : ''}`}>
                         {roomData.isRevealed && averageScore ? averageScore : '-'}

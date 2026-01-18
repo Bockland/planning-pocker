@@ -15,16 +15,16 @@ const ChangeNameModal = ({ isOpen, onClose, onChangeName, currentName }) => {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Cambiar Nombre</h3>
+          <h3>Change Name</h3>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-field">
-            <label className="form-label">Nuevo Nombre</label>
+            <label className="form-label">New Name</label>
             <input 
               value={newName} 
               onChange={(e) => setNewName(e.target.value)} 
-              placeholder="Tu nombre" 
+              placeholder="Your name" 
               required 
               autoFocus
               className="input-field"
@@ -32,10 +32,10 @@ const ChangeNameModal = ({ isOpen, onClose, onChangeName, currentName }) => {
           </div>
           <div className="modal-actions">
             <button type="button" onClick={onClose} className="btn-secondary">
-              Cancelar
+              Cancel
             </button>
             <button type="submit" className="btn-primary">
-              Guardar
+              Save
             </button>
           </div>
         </form>
