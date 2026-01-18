@@ -1,0 +1,300 @@
+/* Room Header */
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.room-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.room-title-mobile {
+  font-size: 1.2rem;
+}
+
+.room-id {
+  opacity: 0.7;
+}
+
+.room-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-invite {
+  background-color: #fdba74;
+  color: #7c2d12;
+  border: 1px solid #c2410c;
+  padding: 0.6em 1.2em;
+  font-size: 1rem;
+}
+
+.btn-change-name {
+  background-color: #ffedd5;
+  color: #7c2d12;
+  border: 1px solid #c2410c;
+  padding: 0.6em 1.2em;
+  font-size: 1rem;
+}
+
+.btn-mobile {
+  padding: 0.4em 0.8em;
+  font-size: 0.9rem;
+}
+
+/* Mobile Tabs */
+.mobile-tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #334155;
+}
+
+.mobile-tab {
+  flex: 1;
+  text-align: center;
+  padding: 1rem;
+  cursor: pointer;
+  color: #94a3b8;
+}
+
+.mobile-tab-active {
+  color: #3b82f6;
+  border-bottom: 2px solid #3b82f6;
+  font-weight: bold;
+}
+
+/* Room Content Layout */
+.room-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.participants-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.participants-column.hidden {
+  display: none;
+}
+
+.mobile-full-width {
+  width: 100%;
+}
+
+/* Participants Card */
+.participants-card {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.participants-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.participant-item {
+  text-align: center;
+  position: relative;
+}
+
+.btn-kick {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: red;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 12px;
+  z-index: 10;
+}
+
+/* Reaction Menu */
+.reaction-menu-container {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
+
+.btn-react {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0;
+  backdrop-filter: blur(4px);
+}
+
+.btn-react-open {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.reaction-popover {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #334155;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  gap: 0.3rem;
+  z-index: 30;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-emoji {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 2px;
+}
+
+/* Vote Card */
+.vote-card {
+  width: 60px;
+  height: 90px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  margin: 0 auto 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.vote-card-empty {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px dashed #475569;
+}
+
+.vote-card-voted {
+  background-color: #3b82f6;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.vote-card-revealed {
+  background-color: rgb(77 159 96);
+  border: 2px solid rgb(48 113 12);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.participant-name {
+  display: block;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+.participant-name-me {
+  color: #3b82f6;
+}
+
+.no-voters {
+  color: #94a3b8;
+}
+
+/* Admin Controls */
+.admin-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  border-top: 1px solid #334155;
+  padding-top: 1.5rem;
+}
+
+/* Voting Deck */
+.voting-deck-container {
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.voting-deck {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  min-width: min-content;
+  padding: 0 1rem;
+}
+
+.vote-button {
+  width: 50px;
+  height: 80px;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background-color: #1e293b;
+  color: white;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vote-button-selected {
+  border: 2px solid #3b82f6;
+  background-color: #1e40af;
+}
+
+/* Sidebar */
+.sidebar-column {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar-column.hidden {
+  display: none;
+}
+
+.info-card {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.info-title {
+  margin-top: 0;
+  font-size: 1rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.info-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.average-score {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #475569;
+}
+
+.average-score-revealed {
+  color: #22c55e;
+}
