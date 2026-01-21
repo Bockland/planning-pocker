@@ -1,8 +1,8 @@
 # Planning Poker - Herramienta de Estimación Ágil
-# https://planningpocker.com
+# https://labsimetria.com
 
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://planningpocker.com/sitemap.xml
+Sitemap: https://labsimetria.com/sitemap.xml
